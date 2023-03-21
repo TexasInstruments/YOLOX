@@ -1,0 +1,10 @@
+version: "2.3"
+services:
+  dev:
+    runtime: nvidia
+    build:
+      context: .
+    volumes:
+      - ${PWD}:/work
+    tty: true
+    ipc: host # necessary to avoid torch dataloader error
