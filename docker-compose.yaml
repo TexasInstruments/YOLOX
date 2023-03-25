@@ -7,4 +7,4 @@ services:
     volumes:
       - ${PWD}:/work
     tty: true
-    ipc: host # necessary to avoid torch dataloader error
+    ipc: host
