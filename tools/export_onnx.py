@@ -225,8 +225,8 @@ def main():
         onnx.save(model_simp, args.output_name)
         logger.info("generated simplified onnx model named {}".format(args.output_name))
 
-    export_prototxt(model, img, args.output_name)
-    logger.info("generated prototxt {}".format(args.output_name.replace('onnx', 'prototxt')))
+    # export_prototxt(model, img, args.output_name)
+    # logger.info("generated prototxt {}".format(args.output_name.replace('onnx', 'prototxt')))
 
 if __name__ == "__main__":
     main()

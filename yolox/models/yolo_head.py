@@ -186,10 +186,18 @@ class YOLOXHead(nn.Module):
                     origin_preds.append(reg_output.clone())
 
             else:
+                # XXX: apply sigmoid before cat to avoid ScatterND generated in ONNX
+                '''
                 output = torch.cat(
                     [reg_output, obj_output, cls_output], 1
                 )
                 output[:,4:,:,:] = torch.sigmoid(output[:,4:,:,:])
+                '''
+                obj_output = torch.sigmoid(obj_output)
+                cls_output = torch.sigmoid(cls_output)
+                output = torch.cat(
+                    [reg_output, obj_output, cls_output], 1
+                )
 
             outputs.append(output)
 
