@@ -1,8 +1,8 @@
-# YOLOX-ti-lite Object Detection Models
+# YOLOX-ti-lite Object Detector in TFLite
 
 This repository is based on [TexasInstruments/edgeai-yolox](https://github.com/TexasInstruments/edgeai-yolox).
 
-Based on the TexasInstruments' repository, I added new features and some modifications:
+Based on the TexasInstruments' repository, following new features and minor modification were added:
 - ONNX -> TFLite export with [PINTO0309/onnx2tf](https://github.com/PINTO0309/onnx2tf)
 - TFLite int8 quantization with [PINTO0309/onnx2tf](https://github.com/PINTO0309/onnx2tf)
 - Minor fix of YOLOX head (see [here](https://github.com/motokimura/edgeai-yolox/blob/bb45abd0a34b2e09df08755f24dff61877860d49/yolox/models/yolo_head.py#L189-L200))
