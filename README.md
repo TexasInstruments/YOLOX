@@ -1,15 +1,10 @@
 # YOLOX-ti-lite Object Detection Models
 
-## Install
+## Requirements
 
-```bash
-docker compose build dev
-docker compose run dev bash
-```
+- Docker Compose
 
-## Usage
-
-### Evaluate PyTorch model
+## Setup
 
 Download COCO dataset:
 
@@ -23,11 +18,24 @@ Download YOLOX-ti-lite (nano) pre-trained weight:
 wget http://software-dl.ti.com/jacinto7/esd/modelzoo/latest/models/vision/detection/coco/edgeai-yolox/yolox_nano_ti_lite_26p1_41p8_checkpoint.pth
 ```
 
-Evaluate PyTorch model:
+## Export PyTorch to ONNX
+
+Build and run `torch2onnx` Docker container.
 
 ```bash
-python tools/eval.py -n yolox_nano_ti_lite -c yolox_nano_ti_lite_26p1_41p8_checkpoint.pth --conf 0.001
+docker compose build torch2onnx
+docker compose run --rm torch2onnx bash
 ```
+
+Note that `(torch2onnx)` in the code blocks below means you have to run the commands in the `torch2onnx` container.
+
+Evaluate PyTorch model (optional):
+
+```bash
+(torch2onnx) python tools/eval.py -n yolox_nano_ti_lite -c yolox_nano_ti_lite_26p1_41p8_checkpoint.pth --conf 0.001
+```
+
+Expected result:
 
 ```
  Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.263
@@ -44,24 +52,43 @@ python tools/eval.py -n yolox_nano_ti_lite -c yolox_nano_ti_lite_26p1_41p8_check
  Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.620
 ```
 
-### Evaluate ONNX model
-
 Export PyTorch to ONNX:
 
 ```bash
-python tools/export_onnx.py -n yolox_nano_ti_lite -c yolox_nano_ti_lite_26p1_41p8_checkpoint.pth --output-name yolox_nano_ti_lite.onnx
+(torch2onnx) python tools/export_onnx.py -n yolox_nano_ti_lite -c yolox_nano_ti_lite_26p1_41p8_checkpoint.pth --output-name yolox_nano_ti_lite.onnx
 ```
 
-Run inference on a sample image (optional):
+Run inference on a sample image with ONNX (optional):
 
 ```bash
-python demo/ONNXRuntime/onnx_inference.py -m yolox_nano_ti_lite.onnx -i assets/dog.jpg -s 0.4 --input_shape 416,416 -o tmp/
+(torch2onnx) python demo/ONNXRuntime/onnx_inference.py -m yolox_nano_ti_lite.onnx -i assets/dog.jpg -s 0.4 --input_shape 416,416 -o tmp/
 ```
 
 Evaluate ONNX model:
 
 TBW.
 
-### Evaluate TFLite model
+## Export ONNX to TFLite
+
+Build and run `onnx2tf` Docker container.
+
+```bash
+docker compose build onnx2tf
+docker compose run --rm onnx2tf bash
+```
+
+Note that `(onnx2tf)` in the code blocks below means you have to run the commands in the `onnx2tf` container.
+
+Export PyTorch to ONNX:
+
+```bash
+(onnx2tf) onnx2tf -i yolox_nano_ti_lite.onnx
+```
+
+Run inference on a sample image with TFLite (optional):
+
+TBW.
+
+Evaluate TFLite model:
 
 TBW.

@@ -1,10 +1,22 @@
 version: "2.3"
 services:
-  dev:
+  torch2onnx:
     runtime: nvidia
     build:
       context: .
+      dockerfile: ./docker/torch2onnx.Dockerfile
     volumes:
       - ${PWD}:/work
+    tty: true
+    ipc: host
+  onnx2tf:
+    build:
+      context: .
+      dockerfile: ./docker/onnx2tf.Dockerfile
+    user: ${UID}:${GID}
+    volumes:
+      - ${PWD}:/workdir
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
     tty: true
     ipc: host
