@@ -16,8 +16,8 @@ from yolox.core import Trainer, launch
 from yolox.exp import get_exp
 from yolox.utils import configure_nccl, configure_omp, get_num_devices
 
-_SUPPORTED_DATASETS = ["coco", "lm", "lmo", "ycbv", "tless", "coco_kpts"]
-_NUM_CLASSES = {"coco":80, "lm":15, "lmo": 8, "ycbv": 21, "tless": 30, "coco_kpts":1}
+_SUPPORTED_DATASETS = ["coco", "lm", "lmo", "ycbv", "tless", "coco_kpts", 'oms']
+_NUM_CLASSES = {"coco":80, "lm":15, "lmo": 8, "ycbv": 21, "tless": 30, "coco_kpts":1, 'oms':5}
 _VAL_ANN = {
     "coco":"instances_val2017.json", 
     "lm":"instances_test.json",
@@ -25,6 +25,7 @@ _VAL_ANN = {
     "ycbv": "instances_test_bop.json",
     "tless": "instances_test_bop.json",
     "coco_kpts": "person_keypoints_val2017.json",
+    "oms": "instances_test_oms.json"
 }
 _TRAIN_ANN = {
     "coco":"instances_train2017.json", 
@@ -33,6 +34,7 @@ _TRAIN_ANN = {
     "ycbv": "instances_train.json",
     "tless": "instances_train.json", #"instances_train.json"
     "coco_kpts": "person_keypoints_train2017.json",
+    "oms": "instances_train_oms.json"
 }
 _SUPPORTED_TASKS = {
     "coco":["2dod"],
@@ -40,7 +42,8 @@ _SUPPORTED_TASKS = {
     "lmo": ["2dod", "object_pose"],
     "ycbv": ["2dod", "object_pose"],
     "tless": ["2dod", "object_pose"],
-    "coco_kpts": ["2dod", "human_pose"]
+    "coco_kpts": ["2dod", "human_pose"],
+    "oms":["2dod"]
 }
 
 def make_parser():
@@ -147,6 +150,12 @@ def make_parser():
         default=None,
         nargs=argparse.REMAINDER,
     )
+    parser.add_argument(
+        "--max_epoch",
+        default=300,
+        type=int,
+        help="Max epochs for training",
+    )
     return parser
 
 
@@ -166,6 +175,8 @@ def main(exp, args):
     configure_nccl()
     configure_omp()
     cudnn.benchmark = True
+    
+    exp.max_epoch = max(exp.warmup_epochs, args.max_epoch)
 
     if args.dataset is not None:
         assert (
@@ -252,6 +263,11 @@ def run(**kwargs):
 
 if __name__ == "__main__":
     args = make_parser().parse_args()
+    args.name = 'yolox-s-ti-lite'
+    args.d = 1
+    args.b = 64
+    args.fp16=True
+    args.dataset = 'oms'
     exp = get_exp(args.exp_file, args.name)
     exp.merge(args.opts)
 

@@ -1,5 +1,5 @@
 # TODO: Update with exact module version
-numpy==1.23.0
+numpy
 #torch>=1.7
 opencv-python
 loguru
@@ -12,18 +12,18 @@ ninja
 tabulate
 tensorboard
 #mmcv==1.6.0
-seaborn==0.11.2
+seaborn
 
 # verified versions
 #onnx==1.8.1
 #https://github.com/TexasInstruments/onnx/archive/tidl-j7.zip
 
 #onnxruntime #==1.8.0
-onnx-simplifier==0.4.10
+onnx-simplifier
 
 # Extra packages required for 6d pose estimation
-plyfile==0.7.4
+plyfile
 scikit-learn
 PyYAML
 matplotlib
-sklearn
+#sklearn
